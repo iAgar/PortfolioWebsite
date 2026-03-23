@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MousePointer2, Menu, ArrowRight, Terminal, Linkedin, Mail } from 'lucide-react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -363,7 +364,7 @@ function Projects() {
     const cardWidth = 850;
     const gap = 32;
     // Start at index 1 (the first real project)
-    const initialScroll = 850 + 32; 
+    const initialScroll = 850 + 32;
     // More bulletproof: find the second project item
     const secondCard = scrollRef.current.children[1];
     if (secondCard) {
@@ -377,7 +378,7 @@ function Projects() {
     const scrollPos = scrollRef.current.scrollLeft;
     const containerWidth = scrollRef.current.offsetWidth;
     const cards = scrollRef.current.querySelectorAll('.project-card');
-    
+
     // Stealth Jump Logic
     const totalContentWidth = scrollRef.current.scrollWidth;
     const cardWidthWithGap = cards[1].offsetLeft - cards[0].offsetLeft;
@@ -389,7 +390,7 @@ function Projects() {
       scrollRef.current.scrollLeft = targetPos;
       return;
     }
-    
+
     if (scrollPos >= totalContentWidth - containerWidth - 20) { // Near the end (Clone of First)
       // Jump to the real First project
       const firstRealIdx = 1;
@@ -416,7 +417,7 @@ function Projects() {
     let mappedIdx = closestIdx - 1;
     if (mappedIdx < 0) mappedIdx = projectData.length - 1;
     if (mappedIdx >= projectData.length) mappedIdx = 0;
-    
+
     if (mappedIdx !== activeIdx) setActiveIdx(mappedIdx);
   };
 
@@ -445,7 +446,7 @@ function Projects() {
           let originalIdx = idx - 1;
           if (originalIdx < 0) originalIdx = projectData.length - 1;
           if (originalIdx >= projectData.length) originalIdx = 0;
-          
+
           const isActive = originalIdx === activeIdx;
           return (
             <div

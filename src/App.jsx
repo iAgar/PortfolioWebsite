@@ -4,7 +4,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MousePointer2, Menu, ArrowRight, Terminal, Linkedin, Mail } from 'lucide-react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { SpeedInsights } from "@vercel/speed-insights/next"
 
 gsap.registerPlugin(ScrollTrigger);
 

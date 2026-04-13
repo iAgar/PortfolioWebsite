@@ -504,7 +504,6 @@ function Projects() {
               !isActive && "opacity-0 invisible"
             )}>
               <div className="flex flex-col items-center gap-4 w-full">
-                <h4 className="font-sans font-bold text-xl lg:text-2xl text-background/80 tracking-wide uppercase font-data text-xs text-accent">Documentation</h4>
                 <a
                   href={proj.prdLink}
                   target="_blank"
@@ -665,7 +664,6 @@ function AIProducts() {
               !isActive && "opacity-0 invisible"
             )}>
               <div className="flex flex-col items-center gap-4 w-full">
-                <h4 className="font-sans font-bold text-xl lg:text-2xl text-background/80 tracking-wide uppercase font-data text-xs text-accent">Documentation</h4>
                 {prod.demoLink && (
                   <a
                     href={prod.demoLink}

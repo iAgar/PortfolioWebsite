@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useLayoutEffect } from 'react';
+import React, { useEffect, useRef, useState, useLayoutEffect, useImperativeHandle } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MousePointer2, Menu, ArrowRight, Terminal, Linkedin, Mail, Activity, Newspaper, Music, Plane, Camera, Code } from 'lucide-react';
@@ -80,6 +80,7 @@ function Navbar() {
         }
       `}</style>
       <div className="hidden md:flex items-center gap-16 font-data text-base md:text-lg tracking-wide">
+        <a href="#ai-products" className="link-lift hover:text-accent transition-colors">AI Products</a>
         <a href="#experience" className="link-lift hover:text-accent transition-colors">Experience</a>
         <a href="#projects" className="link-lift hover:text-accent transition-colors">Projects</a>
         <a href="#contact" className="link-lift hover:text-accent transition-colors">Contact</a>
@@ -309,7 +310,7 @@ function PulsingWaveform() {
   );
 }
 
-function Carousel({ items, renderCard, sectionId, sectionTitle }) {
+const Carousel = React.forwardRef(function Carousel({ items, renderCard, sectionId, sectionTitle }, ref) {
   const scrollRef = useRef(null);
   const [activeIdx, setActiveIdx] = useState(0);
 
@@ -386,6 +387,8 @@ function Carousel({ items, renderCard, sectionId, sectionTitle }) {
     }
   };
 
+  useImperativeHandle(ref, () => ({ scrollToIndex }));
+
   return (
     <section id={sectionId} className="projects-container relative w-full pt-32 pb-32 flex flex-col overflow-hidden">
       <div className="px-6 max-w-7xl mx-auto w-full mb-12 shrink-0">
@@ -435,7 +438,7 @@ function Carousel({ items, renderCard, sectionId, sectionTitle }) {
       </div>
     </section>
   );
-}
+});
 
 function Projects() {
   const projectData = [
@@ -537,6 +540,19 @@ function Projects() {
 // E2. AI PRODUCTS SHIPPED
 // ==========================================
 function AIProducts() {
+  const carouselRef = useRef(null);
+
+  useEffect(() => {
+    const match = window.location.hash.match(/^#ai-product-(\d+)$/);
+    if (!match) return;
+    const cardNum = parseInt(match[1], 10);
+    if (cardNum < 1 || cardNum > 6) return;
+    const timer = setTimeout(() => {
+      carouselRef.current?.scrollToIndex(cardNum - 1);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   const getLinkLabel = (url) => {
     if (!url) return null;
     if (url.includes('github.com')) return 'View on GitHub';
@@ -591,6 +607,7 @@ function AIProducts() {
 
   return (
     <Carousel
+      ref={carouselRef}
       items={aiProductData}
       sectionId="ai-products"
       sectionTitle="AI Products Shipped"

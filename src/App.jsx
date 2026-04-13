@@ -632,7 +632,7 @@ function AIProducts() {
       title: 'Portfolio Website',
       desc: 'This website itself — a React 19 + Vite + Tailwind CSS portfolio with GSAP scroll-triggered animations, infinite-loop carousels, ambient floating geometry backgrounds, and a dark gold-accent design system. Fully responsive with custom magnetic button interactions.',
       prdLink: 'https://github.com/iAgar/PortfolioWebsite',
-      demoLink: '',
+      demoLink: 'https://drive.google.com/file/d/6a7b8c9d0e/view?usp=sharing',
       logo: <Code size={32} color="#10B981" className="shrink-0" />,
     },
   ];
@@ -658,43 +658,36 @@ function AIProducts() {
             <p className="font-sans text-sm md:text-base lg:text-lg text-background/80 leading-relaxed pr-2">{prod.desc}</p>
           </div>
 
-          {(prod.prdLink || prod.demoLink) ? (
-            <div className={cn(
-              "flex-1 bg-[#1A1A22] flex flex-col items-center justify-center gap-6 p-6 lg:p-10 border-t md:border-t-0 md:border-l border-white/10 rounded-b-[2rem] md:rounded-bl-none md:rounded-r-[2rem] transition-all duration-500",
-              !isActive && "opacity-0 invisible"
-            )}>
-              <div className="flex flex-col items-center gap-4 w-full">
-                {prod.demoLink && (
-                  <a
-                    href={prod.demoLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-magnetic w-full max-w-[240px] flex items-center justify-center gap-2 bg-transparent border-2 border-accent text-accent px-6 py-3 lg:py-4 rounded-full font-sans font-bold text-base lg:text-lg transition-all hover:bg-accent/10 hover:scale-105 shadow-xl"
-                  >
-                    <Play size={16} />
-                    View Demo
-                  </a>
+          <div className={cn(
+            "flex-1 bg-[#1A1A22] flex flex-col items-center justify-center gap-6 p-6 lg:p-10 border-t md:border-t-0 md:border-l border-white/10 rounded-b-[2rem] md:rounded-bl-none md:rounded-r-[2rem] transition-all duration-500",
+            !isActive && "opacity-0 invisible"
+          )}>
+            <div className="flex flex-col items-center gap-4 w-full">
+              <a
+                href={prod.demoLink || undefined}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  "btn-magnetic w-full max-w-[240px] flex items-center justify-center gap-2 bg-transparent border-2 border-accent text-accent px-6 py-3 lg:py-4 rounded-full font-sans font-bold text-base lg:text-lg transition-all hover:bg-accent/10 hover:scale-105 shadow-xl",
+                  !prod.demoLink && "opacity-40 pointer-events-none cursor-default"
                 )}
-                {prod.prdLink && (
-                  <a
-                    href={prod.prdLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-magnetic w-full max-w-[240px] flex items-center justify-center gap-2 bg-accent text-primary px-6 py-3 lg:py-4 rounded-full font-sans font-bold text-base lg:text-lg transition-all hover:scale-105 shadow-xl"
-                  >
-                    {getLinkLabel(prod.prdLink)}
-                  </a>
+              >
+                <Play size={16} />
+                View Demo
+              </a>
+              <a
+                href={prod.prdLink || undefined}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  "btn-magnetic w-full max-w-[240px] flex items-center justify-center gap-2 bg-accent text-primary px-6 py-3 lg:py-4 rounded-full font-sans font-bold text-base lg:text-lg transition-all hover:scale-105 shadow-xl",
+                  !prod.prdLink && "opacity-40 pointer-events-none cursor-default"
                 )}
-              </div>
+              >
+                {getLinkLabel(prod.prdLink) ?? 'View source'}
+              </a>
             </div>
-          ) : (
-            <div className={cn(
-              "flex-1 bg-[#1A1A22] flex items-center justify-center p-6 lg:p-10 border-t md:border-t-0 md:border-l border-white/10 overflow-hidden rounded-b-[2rem] md:rounded-bl-none md:rounded-r-[2rem] transition-all duration-500",
-              !isActive && "opacity-0 invisible"
-            )}>
-              <PulsingWaveform />
-            </div>
-          )}
+          </div>
         </>
       )}
     />

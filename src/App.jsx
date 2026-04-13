@@ -309,9 +309,135 @@ function PulsingWaveform() {
   );
 }
 
-function Projects() {
+function Carousel({ items, renderCard, sectionId, sectionTitle }) {
   const scrollRef = useRef(null);
   const [activeIdx, setActiveIdx] = useState(0);
+
+  // Extended item list with clones for infinite scroll: [Last, 1, 2, ..., N, First]
+  const extendedItems = [
+    items[items.length - 1],
+    ...items,
+    items[0]
+  ];
+
+  useLayoutEffect(() => {
+    if (!scrollRef.current) return;
+    // More bulletproof: find the second item (first real item)
+    const secondCard = scrollRef.current.children[1];
+    if (secondCard) {
+      const offsetPos = secondCard.offsetLeft - (scrollRef.current.offsetWidth - secondCard.offsetWidth) / 2;
+      scrollRef.current.scrollLeft = offsetPos;
+    }
+  }, []);
+
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    const scrollPos = scrollRef.current.scrollLeft;
+    const containerWidth = scrollRef.current.offsetWidth;
+    const cards = scrollRef.current.querySelectorAll('.carousel-card');
+
+    // Stealth Jump Logic
+    const totalContentWidth = scrollRef.current.scrollWidth;
+
+    if (scrollPos <= 20) { // Near the start (Clone of Last)
+      // Jump to the real Last item
+      const lastRealIdx = items.length;
+      const targetPos = cards[lastRealIdx].offsetLeft - (containerWidth - cards[lastRealIdx].offsetWidth) / 2;
+      scrollRef.current.scrollLeft = targetPos;
+      return;
+    }
+
+    if (scrollPos >= totalContentWidth - containerWidth - 20) { // Near the end (Clone of First)
+      // Jump to the real First item
+      const firstRealIdx = 1;
+      const targetPos = cards[firstRealIdx].offsetLeft - (containerWidth - cards[firstRealIdx].offsetWidth) / 2;
+      scrollRef.current.scrollLeft = targetPos;
+      return;
+    }
+
+    // Calculate activeIdx for pagination/content (map back to original range)
+    let closestIdx = 1;
+    let minDiff = Infinity;
+    const centerPoint = scrollPos + containerWidth / 2;
+
+    cards.forEach((card, i) => {
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const diff = Math.abs(centerPoint - cardCenter);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestIdx = i;
+      }
+    });
+
+    // Map the closest extended index back to original index
+    let mappedIdx = closestIdx - 1;
+    if (mappedIdx < 0) mappedIdx = items.length - 1;
+    if (mappedIdx >= items.length) mappedIdx = 0;
+
+    if (mappedIdx !== activeIdx) setActiveIdx(mappedIdx);
+  };
+
+  const scrollToIndex = (idx) => {
+    if (!scrollRef.current) return;
+    const cards = scrollRef.current.querySelectorAll('.carousel-card');
+    const targetIdx = idx + 1; // Map original idx to extended idx
+    if (cards[targetIdx]) {
+      cards[targetIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  };
+
+  return (
+    <section id={sectionId} className="projects-container relative w-full pt-32 pb-32 flex flex-col overflow-hidden">
+      <div className="px-6 max-w-7xl mx-auto w-full mb-12 shrink-0">
+        <h2 className="font-sans font-bold text-4xl text-background">{sectionTitle}</h2>
+      </div>
+
+      <div
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="w-full overflow-x-auto snap-x snap-mandatory flex items-center gap-8 pb-16 pt-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+      >
+        {extendedItems.map((item, idx) => {
+          // Map idx to its original position in the items array
+          let originalIdx = idx - 1;
+          if (originalIdx < 0) originalIdx = items.length - 1;
+          if (originalIdx >= items.length) originalIdx = 0;
+
+          const isActive = originalIdx === activeIdx;
+          return (
+            <div
+              key={idx}
+              className={cn(
+                "carousel-card shrink-0 w-[85vw] md:w-[600px] lg:w-[850px] h-[70vh] md:h-[550px]",
+                "bg-[#15151b] rounded-[2rem] border border-white/10 flex flex-col md:flex-row shadow-2xl snap-center relative transition-all duration-700 ease-out",
+                !isActive && "blur-[0.5px] opacity-60 scale-[0.98] grayscale-0 pointer-events-none"
+              )}
+            >
+              {renderCard(item, isActive)}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Pagination Dots */}
+      <div className="flex justify-center items-center gap-3 mt-4 mb-8 shrink-0 relative z-10">
+        {items.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => scrollToIndex(idx)}
+            className={cn(
+              "w-2 h-2 rounded-full transition-all duration-500",
+              idx === activeIdx ? "bg-accent w-8" : "bg-white/20 hover:bg-white/40"
+            )}
+            aria-label={`Go to item ${idx + 1}`}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Projects() {
   const projectData = [
     {
       num: '01',
@@ -350,176 +476,60 @@ function Projects() {
     }
   ];
 
-  // Extended project list with clones for infinite scroll: [Last, 1, 2, 3, 4, 5, First]
-  const extendedProjects = [
-    projectData[projectData.length - 1],
-    ...projectData,
-    projectData[0]
-  ];
-
-  useLayoutEffect(() => {
-    if (!scrollRef.current) return;
-    const scrollWidth = scrollRef.current.scrollWidth;
-    const cardWidth = 850;
-    const gap = 32;
-    // Start at index 1 (the first real project)
-    const initialScroll = 850 + 32;
-    // More bulletproof: find the second project item
-    const secondCard = scrollRef.current.children[1];
-    if (secondCard) {
-      const offsetPos = secondCard.offsetLeft - (scrollRef.current.offsetWidth - secondCard.offsetWidth) / 2;
-      scrollRef.current.scrollLeft = offsetPos;
-    }
-  }, []);
-
-  const handleScroll = () => {
-    if (!scrollRef.current) return;
-    const scrollPos = scrollRef.current.scrollLeft;
-    const containerWidth = scrollRef.current.offsetWidth;
-    const cards = scrollRef.current.querySelectorAll('.project-card');
-
-    // Stealth Jump Logic
-    const totalContentWidth = scrollRef.current.scrollWidth;
-    const cardWidthWithGap = cards[1].offsetLeft - cards[0].offsetLeft;
-
-    if (scrollPos <= 20) { // Near the start (Clone of Last)
-      // Jump to the real Last project
-      const lastRealIdx = projectData.length;
-      const targetPos = cards[lastRealIdx].offsetLeft - (containerWidth - cards[lastRealIdx].offsetWidth) / 2;
-      scrollRef.current.scrollLeft = targetPos;
-      return;
-    }
-
-    if (scrollPos >= totalContentWidth - containerWidth - 20) { // Near the end (Clone of First)
-      // Jump to the real First project
-      const firstRealIdx = 1;
-      const targetPos = cards[firstRealIdx].offsetLeft - (containerWidth - cards[firstRealIdx].offsetWidth) / 2;
-      scrollRef.current.scrollLeft = targetPos;
-      return;
-    }
-
-    // Calculate activeIdx for pagination/content (map back to original range)
-    let closestIdx = 1;
-    let minDiff = Infinity;
-    const centerPoint = scrollPos + containerWidth / 2;
-
-    cards.forEach((card, i) => {
-      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-      const diff = Math.abs(centerPoint - cardCenter);
-      if (diff < minDiff) {
-        minDiff = diff;
-        closestIdx = i;
-      }
-    });
-
-    // Map the closest extended index back to original index
-    let mappedIdx = closestIdx - 1;
-    if (mappedIdx < 0) mappedIdx = projectData.length - 1;
-    if (mappedIdx >= projectData.length) mappedIdx = 0;
-
-    if (mappedIdx !== activeIdx) setActiveIdx(mappedIdx);
-  };
-
-  const scrollToIndex = (idx) => {
-    if (!scrollRef.current) return;
-    const cards = scrollRef.current.querySelectorAll('.project-card');
-    const targetIdx = idx + 1; // Map original idx to extended idx
-    if (cards[targetIdx]) {
-      cards[targetIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-    }
-  };
-
   return (
-    <section id="projects" className="projects-container relative w-full pt-32 pb-32 flex flex-col overflow-hidden">
-      <div className="px-6 max-w-7xl mx-auto w-full mb-12 shrink-0">
-        <h2 className="font-sans font-bold text-4xl text-background">Personal Projects</h2>
-      </div>
+    <Carousel
+      items={projectData}
+      sectionId="projects"
+      sectionTitle="Personal Projects"
+      renderCard={(proj, isActive) => (
+        <>
+          <div className={cn(
+            "flex-1 p-6 md:p-8 lg:p-12 flex flex-col justify-center w-full md:w-1/2 transition-all duration-500",
+            !isActive && "opacity-0 invisible"
+          )}>
+            <span className="font-data text-accent text-sm lg:text-base mb-2 lg:mb-4 uppercase tracking-widest">// {proj.num}</span>
+            <h3 className="font-sans font-bold text-2xl md:text-3xl lg:text-4xl text-background mb-4 leading-tight flex items-center gap-3">
+              {proj.logo}
+              {proj.title}
+            </h3>
+            <p className="font-sans text-sm md:text-base lg:text-lg text-background/80 leading-relaxed pr-2">{proj.desc}</p>
+          </div>
 
-      <div
-        ref={scrollRef}
-        onScroll={handleScroll}
-        className="w-full overflow-x-auto snap-x snap-mandatory flex items-center gap-8 pb-16 pt-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-      >
-        {extendedProjects.map((proj, idx) => {
-          // Map idx to its original position in the projectData array
-          let originalIdx = idx - 1;
-          if (originalIdx < 0) originalIdx = projectData.length - 1;
-          if (originalIdx >= projectData.length) originalIdx = 0;
-
-          const isActive = originalIdx === activeIdx;
-          return (
-            <div
-              key={idx}
-              className={cn(
-                "project-card shrink-0 w-[85vw] md:w-[600px] lg:w-[850px] h-[70vh] md:h-[550px]",
-                "bg-[#15151b] rounded-[2rem] border border-white/10 flex flex-col md:flex-row shadow-2xl snap-center relative transition-all duration-700 ease-out",
-                !isActive && "blur-[0.5px] opacity-60 scale-[0.98] grayscale-0 pointer-events-none"
-              )}
-            >
-              <div className={cn(
-                "flex-1 p-6 md:p-8 lg:p-12 flex flex-col justify-center w-full md:w-1/2 transition-all duration-500",
-                !isActive && "opacity-0 invisible"
-              )}>
-                <span className="font-data text-accent text-sm lg:text-base mb-2 lg:mb-4 uppercase tracking-widest">// {proj.num}</span>
-                <h3 className="font-sans font-bold text-2xl md:text-3xl lg:text-4xl text-background mb-4 leading-tight flex items-center gap-3">
-                  {proj.logo}
-                  {proj.title}
-                </h3>
-                <p className="font-sans text-sm md:text-base lg:text-lg text-background/80 leading-relaxed pr-2">{proj.desc}</p>
+          {proj.prdLink ? (
+            <div className={cn(
+              "flex-1 bg-[#1A1A22] flex flex-col items-center justify-center gap-6 p-6 lg:p-10 border-t md:border-t-0 md:border-l border-white/10 rounded-b-[2rem] md:rounded-bl-none md:rounded-r-[2rem] transition-all duration-500",
+              !isActive && "opacity-0 invisible"
+            )}>
+              <div className="flex flex-col items-center gap-4 w-full">
+                <h4 className="font-sans font-bold text-xl lg:text-2xl text-background/80 tracking-wide uppercase font-data text-xs text-accent">Documentation</h4>
+                <a
+                  href={proj.prdLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-magnetic w-full max-w-[240px] flex items-center justify-center gap-2 bg-accent text-primary px-6 py-3 lg:py-4 rounded-full font-sans font-bold text-base lg:text-lg transition-all hover:scale-105 shadow-xl"
+                >
+                  View documentation
+                </a>
               </div>
 
-              {proj.prdLink ? (
-                <div className={cn(
-                  "flex-1 bg-[#1A1A22] flex flex-col items-center justify-center gap-6 p-6 lg:p-10 border-t md:border-t-0 md:border-l border-white/10 rounded-b-[2rem] md:rounded-bl-none md:rounded-r-[2rem] transition-all duration-500",
-                  !isActive && "opacity-0 invisible"
-                )}>
-                  <div className="flex flex-col items-center gap-4 w-full">
-                    <h4 className="font-sans font-bold text-xl lg:text-2xl text-background/80 tracking-wide uppercase font-data text-xs text-accent">Documentation</h4>
-                    <a
-                      href={proj.prdLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-magnetic w-full max-w-[240px] flex items-center justify-center gap-2 bg-accent text-primary px-6 py-3 lg:py-4 rounded-full font-sans font-bold text-base lg:text-lg transition-all hover:scale-105 shadow-xl"
-                    >
-                      View documentation
-                    </a>
-                  </div>
-
-                  {/* <div className="flex flex-col items-center gap-2 text-center mt-2">
-                    <div className="w-1 px-4 py-[1px] bg-accent/50 rounded-full mb-1"></div>
-                    <p className="font-sans font-black text-xl lg:text-3xl text-background tracking-tight">
-                      <span className="text-accent">TL;DR</span> try MVP here
-                    </p>
-                  </div> */}
-                </div>
-              ) : (
-                <div className={cn(
-                  "flex-1 bg-[#1A1A22] flex items-center justify-center p-6 lg:p-10 border-t md:border-t-0 md:border-l border-white/10 overflow-hidden rounded-b-[2rem] md:rounded-bl-none md:rounded-r-[2rem] transition-all duration-500",
-                  !isActive && "opacity-0 invisible"
-                )}>
-                  <PulsingWaveform />
-                </div>
-              )}
+              {/* <div className="flex flex-col items-center gap-2 text-center mt-2">
+                <div className="w-1 px-4 py-[1px] bg-accent/50 rounded-full mb-1"></div>
+                <p className="font-sans font-black text-xl lg:text-3xl text-background tracking-tight">
+                  <span className="text-accent">TL;DR</span> try MVP here
+                </p>
+              </div> */}
             </div>
-          );
-        })}
-      </div>
-
-      {/* Pagination Dots */}
-      <div className="flex justify-center items-center gap-3 mt-4 mb-8 shrink-0 relative z-10">
-        {projectData.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => scrollToIndex(idx)}
-            className={cn(
-              "w-2 h-2 rounded-full transition-all duration-500",
-              idx === activeIdx ? "bg-accent w-8" : "bg-white/20 hover:bg-white/40"
-            )}
-            aria-label={`Go to project ${idx + 1}`}
-          />
-        ))}
-      </div>
-    </section>
+          ) : (
+            <div className={cn(
+              "flex-1 bg-[#1A1A22] flex items-center justify-center p-6 lg:p-10 border-t md:border-t-0 md:border-l border-white/10 overflow-hidden rounded-b-[2rem] md:rounded-bl-none md:rounded-r-[2rem] transition-all duration-500",
+              !isActive && "opacity-0 invisible"
+            )}>
+              <PulsingWaveform />
+            </div>
+          )}
+        </>
+      )}
+    />
   );
 }
 

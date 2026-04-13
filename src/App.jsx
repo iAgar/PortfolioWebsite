@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useLayoutEffect, useImperativeHandle } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { MousePointer2, Menu, ArrowRight, Terminal, Linkedin, Mail, Activity, Newspaper, Music, Plane, Camera, Code, Link, Check } from 'lucide-react';
+import { MousePointer2, Menu, ArrowRight, Terminal, Linkedin, Mail, Activity, Newspaper, Music, Plane, Camera, Code, Link, Check, Play } from 'lucide-react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -593,6 +593,7 @@ function AIProducts() {
       title: 'Strava MCP Server',
       desc: 'A Model Context Protocol server that connects Claude to the Strava fitness API, enabling natural-language fitness data analysis. Built with Cloudflare Workers, MCP-native OAuth (workers-oauth-provider, McpAgent, Durable Objects, KV storage), and StreamableHTTPServerTransport in stateless mode.',
       prdLink: 'https://github.com/iAgar/strava-mcp',
+      demoLink: 'https://drive.google.com/file/d/1a2b3c4d5e/view?usp=sharing',
       logo: <Activity size={32} color="#FC4C02" className="shrink-0" />,
     },
     {
@@ -600,6 +601,7 @@ function AIProducts() {
       title: 'NewsLens',
       desc: 'An AI-powered media bias detection agent that analyzes news articles across sources to surface ideological framing, factual discrepancies, and coverage gaps. Helps users see beyond the headline by comparing how different outlets report the same story.',
       prdLink: 'https://github.com/iAgar/NewsLens',
+      demoLink: 'https://drive.google.com/file/d/6f7g8h9i0j/view?usp=sharing',
       logo: <Newspaper size={32} color="#4A90D9" className="shrink-0" />,
     },
     {
@@ -607,6 +609,7 @@ function AIProducts() {
       title: 'Party DJ',
       desc: 'A webcam-based AI DJ that uses computer vision (pixel differencing) to detect room energy in real-time. Features Web Audio API crossfading, drag-and-drop track upload, and automatic track selection based on crowd movement and sentiment analysis.',
       prdLink: '',
+      demoLink: 'https://drive.google.com/file/d/1k2l3m4n5o/view?usp=sharing',
       logo: <Music size={32} color="#8B5CF6" className="shrink-0" />,
     },
     {
@@ -614,6 +617,7 @@ function AIProducts() {
       title: 'SmartTravel Extension',
       desc: 'A Chrome extension that auto-displays a travel companion widget on flight search sites. Features Packing, Attractions, Food, and Transport tabs with AI-powered recommendations. All API keys handled server-side via Cloudflare Workers.',
       prdLink: '',
+      demoLink: 'https://drive.google.com/file/d/6p7q8r9s0t/view?usp=sharing',
       logo: <Plane size={32} color="#0EA5E9" className="shrink-0" />,
     },
     {
@@ -621,6 +625,7 @@ function AIProducts() {
       title: 'CS Edutainment Reels',
       desc: 'An Instagram Reels page delivering computer science education through dark humor and meme aesthetics. Features graph algorithm explainers with custom canvas-based fire particle systems, BFS wave animations, and the signature Ash & Ember color scheme.',
       prdLink: 'https://www.instagram.com/ishaan.codes',
+      demoLink: 'https://drive.google.com/file/d/1u2v3w4x5y/view?usp=sharing',
       logo: <Camera size={32} color="#E4405F" className="shrink-0" />,
     },
     {
@@ -628,6 +633,7 @@ function AIProducts() {
       title: 'Portfolio Website',
       desc: 'This website itself — a React 19 + Vite + Tailwind CSS portfolio with GSAP scroll-triggered animations, infinite-loop carousels, ambient floating geometry backgrounds, and a dark gold-accent design system. Fully responsive with custom magnetic button interactions.',
       prdLink: 'https://github.com/iAgar/PortfolioWebsite',
+      demoLink: '',
       logo: <Code size={32} color="#10B981" className="shrink-0" />,
     },
   ];
@@ -653,21 +659,34 @@ function AIProducts() {
             <p className="font-sans text-sm md:text-base lg:text-lg text-background/80 leading-relaxed pr-2">{prod.desc}</p>
           </div>
 
-          {prod.prdLink ? (
+          {(prod.prdLink || prod.demoLink) ? (
             <div className={cn(
               "flex-1 bg-[#1A1A22] flex flex-col items-center justify-center gap-6 p-6 lg:p-10 border-t md:border-t-0 md:border-l border-white/10 rounded-b-[2rem] md:rounded-bl-none md:rounded-r-[2rem] transition-all duration-500",
               !isActive && "opacity-0 invisible"
             )}>
               <div className="flex flex-col items-center gap-4 w-full">
                 <h4 className="font-sans font-bold text-xl lg:text-2xl text-background/80 tracking-wide uppercase font-data text-xs text-accent">Documentation</h4>
-                <a
-                  href={prod.prdLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-magnetic w-full max-w-[240px] flex items-center justify-center gap-2 bg-accent text-primary px-6 py-3 lg:py-4 rounded-full font-sans font-bold text-base lg:text-lg transition-all hover:scale-105 shadow-xl"
-                >
-                  {getLinkLabel(prod.prdLink)}
-                </a>
+                {prod.demoLink && (
+                  <a
+                    href={prod.demoLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-magnetic w-full max-w-[240px] flex items-center justify-center gap-2 bg-transparent border-2 border-accent text-accent px-6 py-3 lg:py-4 rounded-full font-sans font-bold text-base lg:text-lg transition-all hover:bg-accent/10 hover:scale-105 shadow-xl"
+                  >
+                    <Play size={16} />
+                    View Demo
+                  </a>
+                )}
+                {prod.prdLink && (
+                  <a
+                    href={prod.prdLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-magnetic w-full max-w-[240px] flex items-center justify-center gap-2 bg-accent text-primary px-6 py-3 lg:py-4 rounded-full font-sans font-bold text-base lg:text-lg transition-all hover:scale-105 shadow-xl"
+                  >
+                    {getLinkLabel(prod.prdLink)}
+                  </a>
+                )}
               </div>
             </div>
           ) : (

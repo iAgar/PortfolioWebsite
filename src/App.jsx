@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useLayoutEffect, useImperativeHandle } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { MousePointer2, Menu, ArrowRight, Terminal, Linkedin, Mail, Activity, Newspaper, Music, Plane, Camera, Code } from 'lucide-react';
+import { MousePointer2, Menu, ArrowRight, Terminal, Linkedin, Mail, Activity, Newspaper, Music, Plane, Camera, Code, Link, Check } from 'lucide-react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -539,6 +539,33 @@ function Projects() {
 // ==========================================
 // E2. AI PRODUCTS SHIPPED
 // ==========================================
+function CopyLinkButton({ index, isActive }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    const url = `${window.location.origin}${window.location.pathname}#ai-product-${index + 1}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className={cn(
+        "absolute top-4 right-4 w-8 h-8 flex items-center justify-center",
+        "bg-white/5 border border-white/10 rounded-lg transition-all duration-200",
+        "text-background/40 hover:bg-white/10 hover:border-accent/30 hover:text-accent",
+        !isActive && "opacity-0 invisible pointer-events-none"
+      )}
+      aria-label="Copy link to this card"
+    >
+      {copied ? <Check size={16} /> : <Link size={16} />}
+    </button>
+  );
+}
+
 function AIProducts() {
   const carouselRef = useRef(null);
 
@@ -613,6 +640,7 @@ function AIProducts() {
       sectionTitle="AI Products Shipped"
       renderCard={(prod, isActive) => (
         <>
+          <CopyLinkButton index={parseInt(prod.num) - 1} isActive={isActive} />
           <div className={cn(
             "flex-1 p-6 md:p-8 lg:p-12 flex flex-col justify-center w-full md:w-1/2 transition-all duration-500",
             !isActive && "opacity-0 invisible"

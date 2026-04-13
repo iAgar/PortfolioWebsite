@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useLayoutEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { MousePointer2, Menu, ArrowRight, Terminal, Linkedin, Mail } from 'lucide-react';
+import { MousePointer2, Menu, ArrowRight, Terminal, Linkedin, Mail, Activity, Newspaper, Music, Plane, Camera, Code } from 'lucide-react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -534,6 +534,112 @@ function Projects() {
 }
 
 // ==========================================
+// E2. AI PRODUCTS SHIPPED
+// ==========================================
+function AIProducts() {
+  const getLinkLabel = (url) => {
+    if (!url) return null;
+    if (url.includes('github.com')) return 'View on GitHub';
+    if (url.includes('instagram.com')) return 'View on Instagram';
+    return 'View documentation';
+  };
+
+  const aiProductData = [
+    {
+      num: '01',
+      title: 'Strava MCP Server',
+      desc: 'A Model Context Protocol server that connects Claude to the Strava fitness API, enabling natural-language fitness data analysis. Built with Cloudflare Workers, MCP-native OAuth (workers-oauth-provider, McpAgent, Durable Objects, KV storage), and StreamableHTTPServerTransport in stateless mode.',
+      prdLink: 'https://github.com/iAgar/strava-mcp',
+      logo: <Activity size={32} color="#FC4C02" className="shrink-0" />,
+    },
+    {
+      num: '02',
+      title: 'NewsLens',
+      desc: 'An AI-powered media bias detection agent that analyzes news articles across sources to surface ideological framing, factual discrepancies, and coverage gaps. Helps users see beyond the headline by comparing how different outlets report the same story.',
+      prdLink: 'https://github.com/iAgar/NewsLens',
+      logo: <Newspaper size={32} color="#4A90D9" className="shrink-0" />,
+    },
+    {
+      num: '03',
+      title: 'Party DJ',
+      desc: 'A webcam-based AI DJ that uses computer vision (pixel differencing) to detect room energy in real-time. Features Web Audio API crossfading, drag-and-drop track upload, and automatic track selection based on crowd movement and sentiment analysis.',
+      prdLink: '',
+      logo: <Music size={32} color="#8B5CF6" className="shrink-0" />,
+    },
+    {
+      num: '04',
+      title: 'SmartTravel Extension',
+      desc: 'A Chrome extension that auto-displays a travel companion widget on flight search sites. Features Packing, Attractions, Food, and Transport tabs with AI-powered recommendations. All API keys handled server-side via Cloudflare Workers.',
+      prdLink: '',
+      logo: <Plane size={32} color="#0EA5E9" className="shrink-0" />,
+    },
+    {
+      num: '05',
+      title: 'CS Edutainment Reels',
+      desc: 'An Instagram Reels page delivering computer science education through dark humor and meme aesthetics. Features graph algorithm explainers with custom canvas-based fire particle systems, BFS wave animations, and the signature Ash & Ember color scheme.',
+      prdLink: 'https://www.instagram.com/ishaan.codes',
+      logo: <Camera size={32} color="#E4405F" className="shrink-0" />,
+    },
+    {
+      num: '06',
+      title: 'Portfolio Website',
+      desc: 'This website itself — a React 19 + Vite + Tailwind CSS portfolio with GSAP scroll-triggered animations, infinite-loop carousels, ambient floating geometry backgrounds, and a dark gold-accent design system. Fully responsive with custom magnetic button interactions.',
+      prdLink: 'https://github.com/iAgar/PortfolioWebsite',
+      logo: <Code size={32} color="#10B981" className="shrink-0" />,
+    },
+  ];
+
+  return (
+    <Carousel
+      items={aiProductData}
+      sectionId="ai-products"
+      sectionTitle="AI Products Shipped"
+      renderCard={(prod, isActive) => (
+        <>
+          <div className={cn(
+            "flex-1 p-6 md:p-8 lg:p-12 flex flex-col justify-center w-full md:w-1/2 transition-all duration-500",
+            !isActive && "opacity-0 invisible"
+          )}>
+            <span className="font-data text-accent text-sm lg:text-base mb-2 lg:mb-4 uppercase tracking-widest">// {prod.num}</span>
+            <h3 className="font-sans font-bold text-2xl md:text-3xl lg:text-4xl text-background mb-4 leading-tight flex items-center gap-3">
+              {prod.logo}
+              {prod.title}
+            </h3>
+            <p className="font-sans text-sm md:text-base lg:text-lg text-background/80 leading-relaxed pr-2">{prod.desc}</p>
+          </div>
+
+          {prod.prdLink ? (
+            <div className={cn(
+              "flex-1 bg-[#1A1A22] flex flex-col items-center justify-center gap-6 p-6 lg:p-10 border-t md:border-t-0 md:border-l border-white/10 rounded-b-[2rem] md:rounded-bl-none md:rounded-r-[2rem] transition-all duration-500",
+              !isActive && "opacity-0 invisible"
+            )}>
+              <div className="flex flex-col items-center gap-4 w-full">
+                <h4 className="font-sans font-bold text-xl lg:text-2xl text-background/80 tracking-wide uppercase font-data text-xs text-accent">Documentation</h4>
+                <a
+                  href={prod.prdLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-magnetic w-full max-w-[240px] flex items-center justify-center gap-2 bg-accent text-primary px-6 py-3 lg:py-4 rounded-full font-sans font-bold text-base lg:text-lg transition-all hover:scale-105 shadow-xl"
+                >
+                  {getLinkLabel(prod.prdLink)}
+                </a>
+              </div>
+            </div>
+          ) : (
+            <div className={cn(
+              "flex-1 bg-[#1A1A22] flex items-center justify-center p-6 lg:p-10 border-t md:border-t-0 md:border-l border-white/10 overflow-hidden rounded-b-[2rem] md:rounded-bl-none md:rounded-r-[2rem] transition-all duration-500",
+              !isActive && "opacity-0 invisible"
+            )}>
+              <PulsingWaveform />
+            </div>
+          )}
+        </>
+      )}
+    />
+  );
+}
+
+// ==========================================
 // F. CONTACT & G. FOOTER — "The Anchor"
 // ==========================================
 function Footer() {
@@ -595,6 +701,7 @@ function App() {
       <BackgroundAnimation />
       <Navbar />
       <Hero />
+      <AIProducts />
       <Experience />
       <Projects />
       <Footer />

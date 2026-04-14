@@ -611,30 +611,30 @@ function AIProducts() {
       demoLink: 'https://drive.google.com/file/d/6p7q8r9s0t/view?usp=sharing',
       logo: <Plane size={32} color="#0EA5E9" className="shrink-0" />,
     },
-    {
+    /* {
       num: '04',
       title: 'CS Edutainment Reels',
       desc: 'An Instagram Reels page delivering computer science education through dark humor and meme aesthetics. Features graph algorithm explainers with custom canvas-based fire particle systems, BFS wave animations, and the signature Ash & Ember color scheme.',
       prdLink: 'https://www.instagram.com/ishaan.codes',
       demoLink: 'https://drive.google.com/file/d/1u2v3w4x5y/view?usp=sharing',
       logo: <Camera size={32} color="#E4405F" className="shrink-0" />,
-    },
+    }, */
     {
-      num: '05',
+      num: '04',
       title: 'NewsLens',
       desc: 'An AI-powered media bias detection agent that analyzes news articles across sources to surface ideological framing, factual discrepancies, and coverage gaps. Helps users see beyond the headline by comparing how different outlets report the same story.',
       prdLink: 'https://github.com/iAgar/NewsLens',
       demoLink: 'https://drive.google.com/file/d/6f7g8h9i0j/view?usp=sharing',
       logo: <Newspaper size={32} color="#4A90D9" className="shrink-0" />,
     },
-    {
+    /* {
       num: '06',
       title: 'Portfolio Website',
       desc: 'This website itself — a React 19 + Vite + Tailwind CSS portfolio with GSAP scroll-triggered animations, infinite-loop carousels, ambient floating geometry backgrounds, and a dark gold-accent design system. Fully responsive with custom magnetic button interactions.',
       prdLink: 'https://github.com/iAgar/PortfolioWebsite',
       demoLink: 'https://drive.google.com/file/d/6a7b8c9d0e/view?usp=sharing',
       logo: <Code size={32} color="#10B981" className="shrink-0" />,
-    },
+    }, */
   ];
 
   return (

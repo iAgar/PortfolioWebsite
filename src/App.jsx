@@ -663,7 +663,7 @@ function AIProducts() {
             !isActive && "opacity-0 invisible"
           )}>
             <div className="flex flex-col items-center gap-4 w-full">
-              <a
+              {/* <a
                 href={prod.demoLink || undefined}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -674,7 +674,7 @@ function AIProducts() {
               >
                 <Play size={16} />
                 View Demo
-              </a>
+              </a> */}
               <a
                 href={prod.prdLink || undefined}
                 target="_blank"

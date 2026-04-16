@@ -592,7 +592,7 @@ function AIProducts() {
       title: 'Spotify Party DJ',
       desc: 'A webcam-based AI DJ that uses computer vision (pixel differencing) to detect room energy in real-time. Features Web Audio API crossfading, drag-and-drop track upload, and automatic track selection based on crowd movement and sentiment analysis.',
       prdLink: 'https://github.com/iAgar/SpotifyDJ',
-      demoLink: 'https://drive.google.com/file/d/1k2l3m4n5o/view?usp=sharing',
+      // demoLink: 'https://drive.google.com/file/d/1k2l3m4n5o/view?usp=sharing',
       logo: <Music size={32} color="#8B5CF6" className="shrink-0" />,
     },
     {
@@ -608,7 +608,7 @@ function AIProducts() {
       title: 'SmartTravel Extension',
       desc: 'A Chrome extension that auto-displays a travel companion widget on flight search sites. Features Packing, Attractions, Food, and Transport tabs with AI-powered recommendations. All API keys handled server-side via Cloudflare Workers.',
       prdLink: 'https://github.com/iAgar/SmartTravel',
-      demoLink: 'https://drive.google.com/file/d/6p7q8r9s0t/view?usp=sharing',
+      // demoLink: 'https://drive.google.com/file/d/6p7q8r9s0t/view?usp=sharing',
       logo: <Plane size={32} color="#0EA5E9" className="shrink-0" />,
     },
     /* {
@@ -624,7 +624,7 @@ function AIProducts() {
       title: 'NewsLens',
       desc: 'An AI-powered media bias detection agent that analyzes news articles across sources to surface ideological framing, factual discrepancies, and coverage gaps. Helps users see beyond the headline by comparing how different outlets report the same story.',
       prdLink: 'https://github.com/iAgar/NewsLens',
-      demoLink: 'https://drive.google.com/file/d/6f7g8h9i0j/view?usp=sharing',
+      // demoLink: 'https://drive.google.com/file/d/6f7g8h9i0j/view?usp=sharing',
       logo: <Newspaper size={32} color="#4A90D9" className="shrink-0" />,
     },
     /* {
